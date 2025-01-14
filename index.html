@@ -31,7 +31,8 @@
         padding-top: .5rem;
       }
       
-      .my-block, .my-block-big {
+      .my-block,
+      .my-block-big {
         border-radius: var(--bs-border-radius-xl);
       }
       
@@ -88,12 +89,21 @@
           color: transparent;
         }
       }
-	  
-	  .my-modal {
-        background-color: #fff;
-		color: #000;
-	  }
-      
+
+      .my-modal {
+        padding-right: 1rem;
+        padding-left: 1rem;
+        padding-bottom: 1rem;
+
+        .modal-header {
+          padding: 1rem .5rem;
+        }
+
+        .modal-body {
+          background-color: #fff;
+        }
+      }
+
       .my-step-icon {
         color: #57b5ef;
         display: block;
@@ -122,7 +132,8 @@
       [data-bs-theme='light'] {
         --bs-body-bg: #fff;
       
-        .my-block, .my-block-big {
+        .my-block,
+        .my-block-big {
           background-color: #f6f5f4;
         }
       
@@ -135,7 +146,11 @@
             color: rgba(0, 0, 0, .5);
           }
         }
-      
+
+        .my-modal {
+          background-color: #fff;
+        }
+
         .my-nav-link {
           --bs-nav-link-color: rgba(var(--bs-emphasis-color-rgb), .65);
           --bs-nav-link-hover-color: rgba(var(--bs-emphasis-color-rgb), .9);
@@ -145,7 +160,8 @@
       [data-bs-theme='dark'] {
         --bs-body-bg: #151515;
       
-        .my-block, .my-block-big {
+        .my-block,
+        .my-block-big {
           background-color: #232323;
         }
       
@@ -158,7 +174,11 @@
             color: rgba(255, 255, 255, .5);
           }
         }
-      
+
+        .my-modal {
+          background-color: #232323;
+        }
+
         .my-nav-link {
           --bs-nav-link-color: rgba(var(--bs-emphasis-color-rgb), .65);
           --bs-nav-link-hover-color: rgba(var(--bs-emphasis-color-rgb), .9);
@@ -292,10 +312,12 @@
       </header>
       <div class="d-flex flex-wrap align-items-center gap-2 mb-3">
         <span class="fs-3 fw-bold me-auto" x-text="$t('subscription')"></span>
-        <button class="btn my-btn" id="btn-copy-link" type="button" x-text="$t('copyLink')"></button>
-		<button class="btn my-btn" id="btn-show-qr" data-bs-toggle="modal" data-bs-target="#qrModal" data-ignore="true">
-		  <svg class="bi"><use href="#qr"></use></svg>
-		</button>
+        <div>
+          <button class="btn my-btn me-2" id="btn-copy-link" type="button" x-text="$t('copyLink')"></button>
+          <button class="btn my-btn" id="btn-show-qr" data-bs-toggle="modal" data-bs-target="#qr-modal">
+            <svg class="bi"><use href="#qr"></use></svg>
+          </button>
+        </div>
         <div class="toast-container position-fixed bottom-0 start-50 translate-middle-x p-3">
           <div class="toast my-toast" id="toast-copy-link" role="alert" aria-atomic="true" aria-live="assertive">
             <div class="d-flex">
@@ -306,20 +328,20 @@
             </div>
           </div>
         </div>
-        <!-- QR Modal -->
-        <div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel">
+        <div class="modal fade" id="qr-modal" tabindex="-1" aria-labelledby="qr-modal-label">
           <div class="modal-sm modal-dialog modal-dialog-centered">
-            <div class="my-modal modal-content border border-0 rounded-4">
-              <div class="modal-header">
-                <h1 class="modal-title fw-bold me-auto fs-5" id="qrModalLabel" x-text="$t('subscription')"></h1>
+            <div class="modal-content my-modal border border-0 rounded-4">
+              <div class="modal-header border border-0">
+                <h1 class="modal-title fs-5 fw-bold me-auto" id="qr-modal-label" x-text="$t('subscription')"></h1>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
               </div>
-              <div class="modal-body d-flex justify-content-center align-items-center">
-                <div id="qrcode"></div>
+              <div class="modal-body d-flex align-items-center justify-content-center">
+                <div id="qr-code"></div>
               </div>
             </div>
           </div>
         </div>
+      </div>
       <div class="row row-cols-2 row-cols-sm-4 g-3 mb-5">
         <div class="col">
           <div class="my-block d-flex flex-column h-100">
@@ -524,7 +546,7 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/alpinejs-i18n@2.x.x/dist/cdn.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/davidshimjs/qrcodejs/qrcode.min.js"></script>
     <script>
       const META_THEME_COLORS = {light: '#fff', dark: '#151515'};
       const MESSAGES = {
@@ -831,14 +853,14 @@
       }
       
       function showActiveDropdownButton(btn, selectedBtn, isIndependent) {
+        // const dropdownMenu = document.querySelector('.my-dropdown-menu');
+        // if (!dropdownMenu || !dropdownMenu.contains(selectedBtn)) {
+        //   return;
+        // }
+
         // Change dropdowns that can't be changed because
         // they don't depend on Bootstrap.
-        const dropdownMenu = document.querySelector('.dropdown-menu.my-dropdown-menu');
-        if (!dropdownMenu || !dropdownMenu.contains(selectedBtn)) {
-          return;
-        }
-		
-		if (isIndependent) {
+        if (isIndependent) {
           const activeDropdownBtn = btn.nextElementSibling.querySelector('.active');
           if (activeDropdownBtn) {
             activeDropdownBtn.classList.remove('active');
@@ -903,11 +925,11 @@
       
         const btnGuide = document.getElementById('btn-guide');
         const btnPrefGuideTab = document.querySelector(
-          `[data-bs-target="${getPreferredGuideTab()}"]`,
+          `.dropdown-item[data-bs-target="${getPreferredGuideTab()}"]`,
         );
         bootstrap.Tab.getOrCreateInstance(btnPrefGuideTab).show();
         showActiveDropdownButton(btnGuide, btnPrefGuideTab);
-        document.querySelectorAll('[data-bs-target]').forEach(btn => {
+        document.querySelectorAll('.dropdown-item[data-bs-target]').forEach(btn => {
           btn.addEventListener('click', () => {
             showActiveDropdownButton(btnGuide, btn);
           });
@@ -918,15 +940,14 @@
           navigator.clipboard.writeText('{{ user.subscription_url }}');
           bootstrap.Toast.getOrCreateInstance(toastCopyLink).show();
         });
-		
-        const subLink = "{{ user.subscription_url }}";
-		const qrCode = new QRCode(document.getElementById("qrcode"), {
-          text: subLink,
-          width: 256	,
+
+        const qrCode = new QRCode(document.getElementById('qr-code'), {
+          text: '{{ user.subscription_url }}',
+          width: 256,
           height: 256,
-          colorDark: "#000000",
-          colorLight: "#ffffff",
-          correctLevel: QRCode.CorrectLevel.H
+          colorDark: '#000',
+          colorLight: '#fff',
+          correctLevel: QRCode.CorrectLevel.H,
         });
       });
     </script>
